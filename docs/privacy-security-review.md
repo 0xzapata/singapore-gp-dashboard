@@ -1,10 +1,10 @@
 # Privacy and security review
 
-Reviewed on 12 October 2026 for the public Singapore Grand Prix dashboard. The starting revision was `0f5e0f0`. This review covers the application and its published source; it does not inspect Cloudflare or Vercel account audit logs, billing configuration, or the security of their infrastructure.
+Reviewed on 12 October 2026 for the public Singapore Grand Prix dashboard, with Git history cleanup completed the same day. This review covers the application and its published source; it does not inspect Cloudflare or Vercel account audit logs, billing configuration, or the security of their infrastructure.
 
 ## Result
 
-No credentials or unintended personal data were found by the secret scans and manual checks described below. One low-severity disclosure was found: the Vite configuration contained a private development hostname. The current configuration now reads that value from an ignored local environment file. The hostname remains in earlier public Git commits; it is infrastructure metadata, not an authentication credential. Git history was not rewritten.
+No credentials or unintended personal data were found by the secret scans and manual checks described below. One low-severity disclosure was found: the Vite configuration contained a private development hostname. The current configuration now reads that value from an ignored local environment file. At the user's request, the published Git history was rewritten to replace the hostname in earlier commits. The hostname is infrastructure metadata rather than an authentication credential.
 
 The project intentionally publishes public sporting information: driver names, photographs, birth dates, biographies, and race records. Public project handles and third-party asset credits also remain visible. These are personal or identifying information, so this project should not be described as containing no PII whatsoever.
 
@@ -13,6 +13,7 @@ The project intentionally publishes public sporting information: driver names, p
 | Check | Result |
 | --- | --- |
 | Gitleaks 8.30.1, all reachable Git history, fully redacted output | No detected secrets |
+| Private development hostname, all reachable Git objects after history cleanup | No occurrences; the application files at the branch tip were identical before and after the rewrite |
 | Gitleaks, working directory and production build | No detected secrets |
 | Tracked files and filenames across Git history | No real environment files, private keys, authentication stores, or cloud-provider state committed |
 | Git author and committer identities | GitHub noreply addresses; no personal email addresses found |
@@ -33,6 +34,7 @@ Raw scan reports are kept outside the repository. The scanner binary was downloa
 ## Changes made
 
 - Removed the private hostname from tracked Vite configuration. `DASHBOARD_PREVIEW_HOST` in the ignored `.env.local` enables the existing local development and preview hosts. The variable is excluded from Vite's browser environment and host checks remain restricted.
+- Rewrote the public `main` branch to replace the private hostname in earlier commits, using a force push protected by the expected previous branch revision. Verified every reachable Git object in the rewritten history and synchronized the local checkout.
 - Added explicit `.env*`, `.git/`, and `.vercel/` exclusions to `.vercelignore`, alongside the existing Cloudflare state and heavy-asset exclusions.
 - Added `Referrer-Policy: no-referrer` so asset and navigation requests do not send the dashboard URL as a referrer.
 - Added `X-Content-Type-Options: nosniff` and disabled camera, microphone, and geolocation through `Permissions-Policy`.
@@ -44,7 +46,9 @@ Production response headers and exclusions are checked again after deployment. T
 
 Vercel, Cloudflare R2, and Formula 1's media CDN receive ordinary request metadata such as IP addresses and user agents when a browser downloads their assets. Their infrastructure may log that metadata. The application does not add visitor analytics or send a visitor profile, but this review cannot establish a zero-logging policy for those providers.
 
-The earlier development hostname is still discoverable in public Git history. Removing it from the current code prevents new copies in configuration, but does not erase existing commits or copies already downloaded.
+The published branch history no longer contains the private development hostname. A fresh public mirror clone was checked after the force push, and none of its reachable Git objects contained the hostname. An old commit URL on GitHub was also checked and still served the earlier configuration. Removing those retained objects and cached views requires GitHub Support; its policy limits assistance to sensitive-data removal, so acceptance is not guaranteed. See [GitHub's history-removal guidance](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository).
+
+Copies already downloaded, forks, and archived pages can also retain older commits. This cleanup does not erase those external copies. Existing contributors should make a fresh clone or reset to the rewritten `main` branch before pushing; merging the old history would reintroduce it.
 
 Public R2 URLs, bucket names, hashes, source URLs, driver information, and license credits are intentionally public. There are no signed asset URLs or embedded cloud credentials in the reviewed bundle. Public image and car URLs grant access to those intended assets, not administrative access to the account.
 
