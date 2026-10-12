@@ -15,6 +15,8 @@ npm run dev -- --port 5173
 
 `npm run build` creates a static site in `dist/`. `npm test` checks historical classification, telemetry, tyre changes, standings, replay controls and camera flights. The relative Vite base supports deployment under a subdirectory.
 
+If you access Vite through a private hostname, set `DASHBOARD_PREVIEW_HOST` in the ignored `.env.local` file. This adds that host to both development and preview allowlists without publishing it in the source or client bundle. Localhost works without this setting.
+
 ## Use
 
 - The race date, 11 October 2026 at 20:00 SGT, appears below the app name. The completed event has no countdown; the header retains the Singapore clock.
@@ -114,3 +116,9 @@ The complete reproduction prompt is in [docs/dashboard-generation-prompt.md](doc
 Vercel serves static HTML, JavaScript, fonts, map geometry, and the bundled race archive. The compressed 2026 race archive is about 1.20 MB. The browser downloads the archive once at startup and calculates playback, seeking, car movement, and telemetry locally, without polling OpenF1 or invoking server functions. The shared car model and driver portraits load from Cloudflare R2. Team logos load from Formula 1's media CDN.
 
 A fresh visit transfers the archive and static app assets once. Repeat-load transfer depends on browser caching. Vercel Hobby includes 100 GB of Fast Data Transfer and one million CDN requests; exceeding those allowances can interrupt availability without automatic usage overages. Review the current plan and [official Vercel limits](https://vercel.com/docs/plans/hobby) before upgrading. R2 and CDN pricing have separate allowances.
+
+## Privacy
+
+The application has no visitor accounts, analytics, cookies, browser storage, data-submission endpoints, or visitor database. Driver names, portraits, birth dates, biographies, and race records are intentionally included public sporting information. Vercel, Cloudflare R2, and Formula 1's media CDN can still receive and log ordinary asset-request metadata such as IP addresses and user agents.
+
+See [the privacy and security review](docs/privacy-security-review.md) for the checked source, Git history, build output, deployed endpoints, fixes, and remaining limits. The app sends no referrer header and disables camera, microphone, and geolocation through its deployment headers. Keep credentials and private preview hostnames out of source and `VITE_` variables.

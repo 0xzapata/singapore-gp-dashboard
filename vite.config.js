@@ -1,7 +1,11 @@
-import { defineConfig } from 'vite';
+import { defineConfig, loadEnv } from 'vite';
 
-export default defineConfig({
-  base: './',
-  server: { allowedHosts: ['private-preview.invalid'] },
-  preview: { allowedHosts: ['private-preview.invalid'] },
+export default defineConfig(({ mode }) => {
+  const host = loadEnv(mode, process.cwd(), 'DASHBOARD_').DASHBOARD_PREVIEW_HOST?.trim();
+  const allowedHosts = host ? [host] : [];
+  return {
+    base: './',
+    server: { allowedHosts },
+    preview: { allowedHosts },
+  };
 });
