@@ -1,8 +1,8 @@
 # Build SG Grand Prix 2026 in one pass
 
-Build and finish a responsive, interactive Formula 1 dashboard called **SG Grand Prix 2026**. It presents a miniature 3D Marina Bay circuit and replays the completed 11 October 2026 Singapore Grand Prix with recorded data. The header has the race date and Singapore clock, with no countdown. Deliver the working application, downloaded assets, data importer, source notes, verification, and Vercel deployment when the account is connected. Make routine implementation decisions and complete the work without stopping at a plan.
+Build and finish a responsive, interactive Formula 1 dashboard called **SG Grand Prix 2026**. It presents a miniature 3D Marina Bay circuit and replays the completed 11 October 2026 Singapore Grand Prix with recorded data. The header has the race date and Singapore clock, with no countdown. Deliver the working application, licensed detailed car, data and asset importers, source notes, verification, public GitHub repository, and Vercel deployment when the account is connected. Make routine implementation decisions and complete the work without stopping at a plan.
 
-Use recorded race data, track-shaped building scans, green pedal gauges, and verified post-race news specified below.
+Implement the final design specified below, including recorded race data, track-shaped building scans, green pedal gauges, verified post-race news, smooth camera flights, and portrait cards that stay visible at the map edge. The existing public reference is https://github.com/0xzapata/singapore-gp-dashboard and the deployed dashboard is https://singapore-gp-dashboard.vercel.app/. This prompt is a complete reproduction specification; the reference project was developed through iteration.
 
 ## Match the visual direction
 
@@ -94,7 +94,35 @@ Use a perspective orbit view, roughly a 38-degree field of view, with damping an
 
 Give the Marina Bay title block 8 px vertical and 12 px horizontal padding. Give the bottom scene control strip 6 px vertical and 12 px horizontal padding. Keep labels clear of controls and the timeline. Remove visible debug readouts such as `Circuit / 19 turns`, `Car locations / lap interpolation`, and `points / WebGL`. Keep implementation notes in the sources dialog.
 
-Use the detailed **F1 Generic 2022 by TheoDev**, CC BY 4.0, available in the pinned source archive at https://github.com/diazandez/threejs-F1-2022-models/tree/2f0c3e774c698b79095755093495f4b4a102d06e/f1_generic_2022. Preserve its sculpted body, halo, multi-element wings, suspension, cockpit, textured tyres and detailed rims. Include the original attribution in `public/models/F1-CAR-LICENSE.txt` and record source URLs, hashes and adaptations in `public/models/formula-car-source.json`. This is a generic 2022-era chassis with team colours, not an exact 2026 constructor car or sponsor livery. Reproduce the asset with `scripts/import-formula-car.js` through the pinned glTF Transform 4.4.0 tool. Split tyres, rims and brake geometry into four wheel pivots, prepare neutral body materials for team recolouring, embed WebP textures up to 1024px, and use Meshopt compression. The 1,532,608-byte GLB contains 101,506 triangles for close views and 20,807 for distant views. Switch to distant geometry beyond six scene units with hysteresis. Share geometry and textures across all 22 cars, cache team paint materials, orient the nose along the circuit tangent, and spin each wheel from traveled distance divided by its actual radius. Add a generated environment map for reflections without an external HDR request. Keep cars small, around 0.34 scene units long. Use a restrained selection ring. Load the shared model once from R2 at https://pub-451ea606e71242028630e5aadc8cd8aa.r2.dev/sg-grand-prix/models/f1-generic-2022-v1/formula-car.glb with a one-year immutable cache. Set `VITE_FORMULA_CAR_URL` to that URL in production and exclude `public/models/formula-car.glb` from Vercel uploads. An unset variable uses the bundled local asset. Do not represent cars as circles or oversized markers.
+## Use a detailed licensed F1 car
+
+Use **F1 Generic 2022 by TheoDev**, licensed under **CC BY 4.0**, from the pinned archive at https://github.com/diazandez/threejs-F1-2022-models/tree/2f0c3e774c698b79095755093495f4b4a102d06e/f1_generic_2022. The original Sketchfab page is unavailable; preserve its attribution and archived license. Retain the sculpted body, halo, multi-element wings, suspension, cockpit, textured tyres, brake geometry, and detailed rims. Paint the shared chassis in each driver's team colours. Identify it accurately in Data & Sources as a generic 2022-era chassis with team colours; it does not reproduce each constructor's 2026 chassis or sponsor livery.
+
+Provide `scripts/import-formula-car.js`. Download from the pinned source commit, verify the source license, and record source URLs, file hashes, author, license, and adaptations in `public/models/formula-car-source.json`. Preserve the original attribution in `public/models/F1-CAR-LICENSE.txt`. Split tyres, rims, and brake geometry into four centered wheel pivots. Prepare neutral body materials for recolouring, embed WebP textures capped at 1024 px, and compress geometry with Meshopt. Reproduce the import through the pinned glTF Transform tool:
+
+```sh
+npx --yes --package @gltf-transform/cli@4.4.0 -c 'node scripts/import-formula-car.js'
+```
+
+The optimized reference asset has these characteristics:
+
+| Property | Value |
+| --- | --- |
+| Output | `public/models/formula-car.glb` |
+| Binary size | 1,532,608 bytes |
+| Close-view geometry | 101,506 triangles |
+| Overview geometry | 20,807 triangles |
+| LOD switch | 6 scene units, hysteresis 0.12 |
+| Car length | 0.34 scene units |
+| SHA-256 | `7bcc046b05b54f3e192685b2b77a4fa7ef61133a032ecf57cbf29c7ad1c614ba` |
+
+Load the GLB once with Three.js `GLTFLoader` and its bundled `MeshoptDecoder`. Clone the car hierarchy for all 22 drivers while sharing geometry and textures. Cache paint materials by material role and team colour. Use a `THREE.LOD` per car, with detailed geometry for close views and overview geometry beyond the switch distance. The hysteresis must prevent flicker near that distance. Keep the nose aligned with the circuit tangent, the tyres touching the track, and the miniature size consistent between levels. Cars must look like detailed F1 cars rather than low-poly placeholders, circles, or oversized markers. Use a restrained selection ring.
+
+Each detail level has four correctly centered wheel pivots, for eight pivots per car across the two levels. Keep wheel geometry relative to its local center. Rotate around X using traveled distance divided by that wheel's actual radius, with distance and radius in the same scaled units. Update both levels so a LOD change preserves wheel angle. The wheel centers must remain fixed during rotation. Wheel state must follow replay seeking and restarting deterministically.
+
+Generate reflections locally with Three.js `RoomEnvironment` and `PMREMGenerator`, using an environment intensity around 0.5. Keep tyre materials dark and rough and body paint subtly reflective. This adds no HDR download. Retain the lens blur, camera flights, and telemetry-guided motion when integrating the model. Dispose of shared geometry, textures, and materials once when the scene is released.
+
+Production delivery uses R2 as specified below. An unset `VITE_FORMULA_CAR_URL` loads the bundled local GLB. When the production URL is set, surface a failed fetch through the existing scene error handling; the excluded local binary is unavailable on Vercel.
 
 ## Animate a track-shaped holographic scan
 
@@ -126,17 +154,64 @@ Use an approximately 252 × 82 px card on desktop and 228 × 74 px on mobile, wi
 
 Project the selected car into screen coordinates every frame and move the card with a GPU transform. Prefer placing it above/right of the car, flip to the left near the right edge, and clamp it inside the circuit card. Reserve space for the title, view controls, lower navigation strip, and integrated timeline. In Orbit mode, when the selected car leaves the screen or passes behind the camera, smoothly collapse the card into a portrait-only badge. Keep the badge inside the map and follow the nearest edge toward the car's off-screen direction. Do not add an arrow. When the car returns, smoothly expand the full driver card and resume following it. Animate the width and fade the details without wrapping them during the transition; constrain the card throughout expansion as well as collapse. Respect reduced motion. Top Down retains the full card for visible cars; Car cam hides it. Let pointer events pass through so it does not block camera interaction. Update the portrait and text whenever the selected driver changes. Use initials when a photograph fails.
 
-### Serve portraits from Cloudflare R2
+## Serve portraits and the car from Cloudflare R2
 
-Keep driver photograph binaries off Vercel. Load only the selected driver's photograph; do not preload the entire grid. Use long browser caching and a versioned prefix so selecting a previously viewed driver reuses its cached image.
+Keep the portrait binaries and car GLB off Vercel. Use the existing **`dev-assets-bucket`** when access is connected, with isolated versioned prefixes. Reuse these public URLs, or configure equivalent URLs under the connected account:
 
-The existing public R2 base is:
+```dotenv
+VITE_DRIVER_PORTRAITS_URL=https://pub-451ea606e71242028630e5aadc8cd8aa.r2.dev/sg-grand-prix/portraits/2026-v2
+VITE_FORMULA_CAR_URL=https://pub-451ea606e71242028630e5aadc8cd8aa.r2.dev/sg-grand-prix/models/f1-generic-2022-v1/formula-car.glb
+```
 
-`https://pub-451ea606e71242028630e5aadc8cd8aa.r2.dev/sg-grand-prix/portraits/2026-v2`
+Put these public configuration values in a safe `.env.example`, the ignored `.env.local` for local builds, and Vercel's Production environment before building. `VITE_` values are compiled into the browser bundle; they must contain only public URLs. Keep Cloudflare and Vercel credentials in their CLI authentication stores or deployment environment, never in the client or repository.
 
-Each file is `{CODE}.png`, for example `RUS.png`, `VER.png`, and `COL.png`. Set `VITE_DRIVER_PORTRAITS_URL` to that public base or to the replacement public R2 base. Never put Cloudflare credentials in client code.
+### Portraits
 
-For a fresh asset import, use the OpenF1 session 11388 roster and the official 2026 Formula 1 driver profile portrait URLs. Legacy OpenF1 headshot URLs can return old kits or generic silhouettes, so verify the current-season portrait. Convert the official profile portraits to PNG and keep them in R2. Download to a staging folder outside `public/`, record URLs and hashes, then upload to R2 with `Content-Type: image/png` and `Cache-Control: public, max-age=31536000, immutable`. Exclude staged photographs from Vercel uploads and the static build. Preserve portrait attribution separately from the CC BY car license. Use the existing `dev-assets-bucket` and the isolated prefix above when access is available, without changing unrelated bucket content or access settings.
+Each file is `{CODE}.png`, such as `RUS.png`, `VER.png`, or `COL.png`. Load only the selected driver's photograph, with both driver cards using the same URL; do not preload the grid. A previously viewed portrait should reuse the browser cache.
+
+Provide `scripts/import-driver-portraits.py` and `scripts/upload-driver-portraits.js`. Use the OpenF1 session 11388 roster and official 2026 Formula 1 profile portraits. Legacy headshot URLs can return old kits or silhouettes, so verify the current-season images. Convert portraits to 192 × 208 px PNGs and stage them in `assets/driver-portraits/`, outside `public/`. Record URLs, dimensions, retrieval time, and SHA-256 hashes in `public/data/driver-portrait-sources.json`. Upload with `Content-Type: image/png` and `Cache-Control: public, max-age=31536000, immutable`. Preserve portrait attribution separately from the CC BY car license. Photograph rights belong to their respective rights holders.
+
+### Shared car asset
+
+Upload the optimized GLB to `sg-grand-prix/models/f1-generic-2022-v1/formula-car.glb`, with `Content-Type: model/gltf-binary` and `Cache-Control: public, max-age=31536000, immutable`. The grid shares one download and embedded textures. Keep the model's small source records and license in the static site so users can inspect its attribution. The local GLB remains available in the public source repository for offline builds but is excluded from Vercel uploads.
+
+```sh
+npx wrangler r2 object put dev-assets-bucket/sg-grand-prix/models/f1-generic-2022-v1/formula-car.glb --file public/models/formula-car.glb --remote --content-type model/gltf-binary --cache-control 'public, max-age=31536000, immutable'
+```
+
+Use new versioned prefixes for changed assets so immutable caches remain valid. Do not change unrelated objects or bucket access settings.
+
+### Browser CORS
+
+A public image displayed with `<img>` does not prove the bucket permits the GLB fetch. Configure and verify CORS for the actual application origins. Inspect the existing rules first:
+
+```sh
+npx wrangler r2 bucket cors list dev-assets-bucket
+```
+
+Provide `scripts/formula-car-r2-cors.json`. Preserve unrelated existing rules and add a read-only rule with these settings:
+
+- Origins: `https://singapore-gp-dashboard.vercel.app`, `http://localhost:5173`, `http://localhost:5175`, `http://localhost:5176`, and the corresponding `http://127.0.0.1` ports. Add the actual replacement production or development origins when applicable.
+- Methods: `GET`, `HEAD`.
+- Allowed header: `Range`.
+- Exposed headers: `Content-Length`, `ETag`.
+- Max age: 86,400 seconds.
+
+Apply the merged configuration through Wrangler:
+
+```sh
+npx wrangler r2 bucket cors set dev-assets-bucket --file scripts/formula-car-r2-cors.json
+```
+
+Check a real browser request from the deployed origin, including the response's CORS and cache headers. A successful CLI download alone does not establish browser access.
+
+### Keep replay static and costs bounded
+
+Vercel serves static HTML, JavaScript, CSS, bundled fonts, map geometry, source records, and the historical archive. Download the archive once at startup and calculate playback, seeking, standings, telemetry, and motion in the browser. Load the car once from R2 and selected portraits on demand. Team logos use the official Formula 1 media CDN. Import news into the client bundle during development.
+
+Add no runtime OpenF1, Jolpi, news, or biography polling, database, authentication service, serverless function, edge function, tracking SDK, or third-party widget. Explain this delivery model in the README, including initial asset sizes, repeat-visit caching, and the separate Vercel/R2 allowances. Static hosting still consumes bandwidth and requests; check current provider limits rather than promising unlimited free traffic.
+
+Exclude `.env*`, `.git/`, `.vercel/`, `.wrangler/`, `.cache/`, `node_modules/`, `dist/`, `assets/driver-portraits/`, `public/models/formula-car.glb`, and `docs/media/` from Vercel uploads. Keep `.env.example` tracked in Git while ignoring actual environment files. Confirm the binary exclusions on the deployed site.
 
 ## Build animated telemetry instruments
 
@@ -184,8 +259,26 @@ Use semantic controls, visible keyboard focus, pressed states for view/rate/driv
 
 Use one animation loop, reuse geometry/materials, cap device pixel ratio, and handle resizing. Pause replay advancement while the document is hidden. Dispose of scene resources and observers when appropriate. Keep the page free of console errors and broken asset requests.
 
-Verify the actual browser behavior at desktop, tablet, and 320/390 px mobile widths. Check all 22 driver selections, portraits from R2, names, teams, positions, leader/numeric/lapped gaps, camera modes, mid-flight retargeting, pause/seek/restart, all four replay rates including real-time advancement at 1×, DRS on/off/unavailable, gauge easing, chart alignment, gear tooltips, countdown removal, verified news links, DNF handling, loader success/error/retry, and the timeline's placement inside the map. Confirm that portrait PNGs are absent from the Vercel build. Run focused tests for historical replay, camera flights, chart interpolation/gear events, and frame-rate-independent gauge easing, then run the production build.
+Verify the actual browser behavior at desktop, tablet, and 320/390 px mobile widths. Check all 22 driver selections, portraits from R2, names, teams, positions, leader/numeric/lapped gaps, camera modes, mid-flight retargeting, pause/seek/restart, all four replay rates including real-time advancement at 1×, DRS on/off/unavailable, gauge easing, chart alignment, gear tooltips, countdown removal, verified news links, DNF handling, loader success/error/retry, and the timeline's placement inside the map. Verify that the floating card remains constrained while collapsing at each edge and expanding when the car returns. Check that the separate profile fills the telemetry card's height at every breakpoint. Run focused tests for historical replay, camera flights, chart interpolation/gear events, and frame-rate-independent gauge easing, then run the production build.
+
+Inspect the detailed car in Orbit, Top Down, and Car cam. Verify all 22 model instances, shared geometry and textures, correct team paint, the 0.34-scene-unit size, textured tyres, and near/far LOD switching without flicker. Rotate all four wheel pivots in each level and confirm that their centers stay fixed. Seek and restart to check deterministic wheel state. In production, verify that the GLB loads once from R2 with HTTP 200, correct browser CORS, MIME type, and immutable caching. Confirm that neither portrait PNGs nor the car GLB are served by Vercel. Verify that the car attribution and source records are available.
 
 Verify a full historical lap at 1× against the integrated speed profile. Check that the rendered car's speed follows the telemetry within the documented per-lap correction, and that the motion is continuous across sample and lap boundaries. Traverse the real circuit at a fixed speed to detect artificial pauses at corners independently of telemetry. Check the anti-clockwise racing direction, genuine recorded stops, missing-data fallback, and identical positions after seeking or advancing by different replay rates. Inspect the surrounding roads in Orbit and Top Down; they must follow the imported geometry, remain unfilled, and stay clear of the track and procedural buildings.
 
-Document local setup, data and news import, portrait download/upload, environment configuration, and deployment. Publish the source to a public GitHub repository. Exclude credentials, environment files, cloud-provider state, cached downloads, node_modules, dist, and portrait binaries from Git. Include a safe .env.example and retain third-party attribution. Deploy the tested static application to the connected Vercel account and return its live URL. If an external account connection is missing, finish all independent work and identify the exact remaining connection step. Deliver the implementation rather than a mock screenshot or an outline.
+## Review privacy before publication
+
+Review tracked files, Git history, bundled datasets, asset metadata, screenshots, and production build output for credentials or unintended personal data. Run a redacted secret scan and dependency audit. Verify that environment files, Git metadata, and cloud-provider state are not publicly served. Do not include private development hostnames, local filesystem paths, personal email addresses, session tokens, or credentials in source, generated prompts, logs, or screenshots. For a private Vite preview hostname, use a non-client environment variable such as `DASHBOARD_PREVIEW_HOST` in the ignored `.env.local`; keep both development and preview host allowlists explicit rather than allowing every host.
+
+The driver names, photographs, and birth dates are intentionally included public sporting data. Explain that distinction in the privacy notes. The application should collect no visitor profile, cookies, location, form submissions, or analytics. CDN providers still receive ordinary request metadata such as IP addresses and user agents. Do not claim that a clean scanner result proves the absence of every possible leak. Populate downloaded text with `textContent`; use static templates for any `innerHTML`. Keep external article and source links marked `rel="noreferrer"`.
+
+Configure Vercel response headers with `Referrer-Policy: no-referrer`, `X-Content-Type-Options: nosniff`, and `Permissions-Policy: camera=(), microphone=(), geolocation=()`. Check the actual deployed headers and asset requests. Record the review scope, evidence, findings, fixes, and remaining limitations without publishing raw secret-scan matches.
+
+## Publish the app and prepare launch materials
+
+Document local setup, historical data and news imports, car generation, portrait download/upload, R2 caching and CORS, public environment configuration, and deployment. Publish the source to a public GitHub repository. Exclude credentials, actual environment files, cloud-provider state, cached downloads, node_modules, dist, and portrait binaries from Git. Include a safe `.env.example`, the reproducible local GLB, and third-party attribution. Deploy the tested static application to the connected Vercel account and return its live URL. For the existing project, retain https://github.com/0xzapata/singapore-gp-dashboard and https://singapore-gp-dashboard.vercel.app/. If an external account connection is missing, finish independent work and identify the exact remaining connection step.
+
+Keep this comprehensive reproduction prompt in `docs/dashboard-generation-prompt.md` and an identical copy in `public/dashboard-generation-prompt.md`. Publish it at `/dashboard-generation-prompt.md`. Check byte equality between the two local copies and the hosted document after deployment. Verify that the deployed JavaScript, CSS, and source notes match the tested build.
+
+Prepare launch drafts in `docs/social-posts.md`: an X post within the platform's standard character limit, an optional source/asset-credit reply, and a Facebook post. Highlight the recorded race replay, detailed F1 cars, holographic Marina Bay, telemetry instruments, smooth camera flights, and public source. Use the model name **GPT-6.1-Sol**, also referred to as **Sol-6.1**, and describe what it helped build. Keep claims tied to the verified app. Do not claim the original development happened in one prompt or that estimated car positions are recorded GPS. Credit TheoDev's car under CC BY 4.0. Prepare a dashboard screenshot in `docs/media/sg-grand-prix-2026.png` and a close car render with attribution in `docs/media/f1-car-detail.png`, keeping this media out of Vercel uploads. Prepare the posts without publishing to social accounts.
+
+Deliver the working app, public repository and deployment links, downloadable prompt, setup instructions, test results, privacy-review findings, and prepared launch materials. Finish the implementation and verification rather than stopping at a mock screenshot or an outline.
