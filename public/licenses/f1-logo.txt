@@ -1,0 +1,7 @@
+F1 logo SVG geometry from Simple Icons
+Source: https://github.com/simple-icons/simple-icons/blob/develop/icons/f1.svg
+License: CC0 1.0 Universal
+https://creativecommons.org/publicdomain/zero/1.0/
+
+Adaptations: cropped SVG viewBox and white fill for the dashboard theme.
+The F1 mark remains a trademark of its owner. The dashboard is an independent fan prototype.

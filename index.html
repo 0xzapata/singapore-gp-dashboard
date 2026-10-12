@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#080a0c" />
+  <meta name="description" content="Replay the completed 2026 Singapore Grand Prix with recorded telemetry, all 22 drivers, a detailed Marina Bay circuit, and post-race Formula 1 news." />
+  <title>SG Grand Prix 2026</title>
+  <style>body.is-loading{margin:0;background:#080a0c}.page-loader{position:fixed;inset:0;z-index:50;display:grid;place-items:center;background:#080a0c;color:#d6dade;font-family:monospace}.page-loader[hidden]{display:none}</style>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+</head>
+<body class="is-loading">
+  <div id="page-loader" class="page-loader">
+    <div class="loader-content">
+      <img class="loader-mark" src="/f1-logo.svg" width="82" height="21" alt="F1" />
+      <p class="loader-title">SG GRAND PRIX 2026</p><span class="eyebrow">MARINA BAY / 11 OCT 2026</span>
+      <div id="loader-progress" class="loader-progress" role="progressbar" aria-label="Dashboard loading" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+        <span class="loader-bar-fill" aria-hidden="true"></span>
+      </div>
+      <p id="loader-status" role="status" aria-live="polite">Loading historical race archive</p><button id="loader-retry" type="button" hidden>RETRY LOADING ↗</button>
+    </div>
+  </div>
+  <noscript><style>.page-loader,.dashboard{display:none!important}</style><p style="padding:24px;color:#ffad66">Enable JavaScript to load the Singapore Grand Prix dashboard.</p></noscript>
+  <div class="dashboard" inert aria-busy="true">
+    <header class="masthead">
+      <a class="brand" href="./" aria-label="SG Grand Prix 2026 home"><img class="brand-mark" src="/f1-logo.svg" width="52" height="13" alt="F1" /><span>SG GRAND PRIX 2026<small><time datetime="2026-10-11T12:00:00Z">11 OCT 2026 · 20:00 SGT</time></small></span></a>
+      <div class="local-clock"><span>MARINA BAY · SGT</span><time id="clock">00:00:00</time></div>
+    </header>
+
+    <aside class="left-stack">
+      <section class="panel session-panel">
+        <div class="panel-heading"><span><i>A</i>SESSION CONTROL</span><span class="pill">REPLAY 2026</span></div>
+        <div class="session-main"><span class="eyebrow">11 OCT 2026 / GRAND PRIX</span><div class="lap-display"><span id="lap">—</span><small>/ 62<em>LAPS</em></small><canvas id="lap-ring" aria-label="Race progress"></canvas></div></div>
+        <div class="session-stats"><div><span>ELAPSED</span><b id="elapsed">—</b></div><div><span>TRACK LENGTH</span><b>4.927 <small>KM</small></b></div></div>
+        <div class="playback"><button id="play" type="button" disabled aria-label="Pause historical replay">Ⅱ <span>PAUSE</span></button><div class="rates" aria-label="Replay speed"><button type="button" disabled data-rate="1" aria-pressed="false">1×</button><button type="button" disabled data-rate="4" aria-pressed="false">4×</button><button type="button" disabled data-rate="8" class="active" aria-pressed="true">8×</button><button type="button" disabled data-rate="16" aria-pressed="false">16×</button></div><button id="restart" class="icon-button" type="button" disabled aria-label="Restart historical replay">↺</button></div>
+      </section>
+
+      <section class="panel timing-panel">
+        <div class="panel-heading"><span><i>B</i>TIMING TOWER</span><span>22 DRIVERS</span></div>
+        <div class="table-labels"><span>POS / DRIVER</span><span>GAP</span><span>TYRE</span></div>
+        <div id="timing" class="timing" aria-label="Recorded 2026 driver standings"></div>
+        <div class="panel-note"><span class="tiny-cross">+</span> SELECT A DRIVER TO INSPECT TELEMETRY</div>
+      </section>
+
+      <section class="panel weekend-panel">
+        <div class="panel-heading"><span><i>C</i>WEEKEND 2026</span><span>UTC +08</span></div>
+        <div class="schedule-row"><span>09 OCT</span><b>Practice 1</b><time>16:30</time></div>
+        <div class="schedule-row"><span>09 OCT</span><b>Sprint qualifying</b><time>20:30</time></div>
+        <div class="schedule-row"><span>10 OCT</span><b>Sprint</b><time>17:00</time></div>
+        <div class="schedule-row"><span>10 OCT</span><b>Qualifying</b><time>21:00</time></div>
+        <div class="schedule-row highlighted"><span>11 OCT</span><b>Grand Prix</b><time>20:00</time></div>
+      </section>
+    </aside>
+
+    <main class="main-stack">
+      <section class="panel circuit-panel">
+        <div class="scene-title"><span class="eyebrow">01 / CIRCUIT RECONSTRUCTION</span><h1>MARINA BAY</h1><p>SINGAPORE · 1.2914° N / 103.8638° E</p></div>
+        <div class="view-controls"><button type="button" id="orbit-view" class="active" aria-pressed="true">ORBIT</button><button type="button" id="top-view" aria-pressed="false">TOP DOWN</button><button type="button" id="car-view" aria-pressed="false">CAR CAM</button><button type="button" id="reset-view" aria-label="Reset camera">↺</button></div>
+        <div id="scene" class="scene" aria-label="Interactive three-dimensional Marina Bay circuit"></div>
+        <canvas id="scene-hud" class="scene-hud" aria-hidden="true"></canvas>
+        <div class="scene-axis"><span>Y</span><b>↑</b><div>↙ <span>X</span> <span>Z</span> ↘</div></div>
+        <span id="render-status" hidden>LOADING 2026 ARCHIVE</span>
+        <div class="scene-bottom"><span>DRAG TO ORBIT <b>·</b> SCROLL TO ZOOM</span><label><input id="city-toggle" type="checkbox" checked /> CITY DETAILS</label></div>
+        <div class="scene-scale"><span>0</span><i></i><span>500 M</span></div>
+        <section class="timeline-panel scene-timeline" aria-label="Historical race playback"><div class="timeline-label"><span class="status-dot"></span>2026 RACE REPLAY<span id="timeline-time">LOADING ARCHIVE</span></div><input type="range" id="timeline" disabled min="0" max="1000" value="280" aria-label="Seek through the 2026 race" /><div class="timeline-labels"><span>LIGHTS OUT</span><span>HALF REPLAY</span><span>CHEQUERED FLAG</span></div></section>
+      </section>
+
+      <div class="telemetry-row">
+        <section class="panel telemetry-profile" id="telemetry-profile" role="group" aria-label="Selected driver profile">
+            <div class="telemetry-photo-row"><div class="telemetry-portrait"><span class="driver-initials" aria-hidden="true"></span><img alt="" decoding="async" /></div><div class="telemetry-team-logo"><span aria-hidden="true"></span><img alt="" decoding="async" /></div></div>
+            <span class="telemetry-driver-name">LOADING DRIVER</span>
+            <div class="telemetry-driver-metrics"><span class="telemetry-driver-position">P —</span><span class="telemetry-driver-gap">—</span></div>
+            <div class="telemetry-driver-details"><span class="telemetry-driver-age"></span><p class="telemetry-driver-description"></p></div>
+        </section>
+      <section class="panel telemetry-panel" aria-label="Selected driver telemetry">
+        <div class="telemetry-body">
+          <div class="speed-instrument">
+            <div class="speed-gauge" id="speed-gauge" role="meter" aria-label="Recorded speed" aria-valuemin="0" aria-valuemax="360" aria-valuetext="No sample">
+              <svg id="speed-dial" viewBox="-88 -88 176 150" aria-hidden="true"></svg>
+              <div class="speed-readout" aria-hidden="true"><span class="eyebrow">SPEED</span><strong id="speed">—</strong><span>KM/H</span></div>
+            </div>
+            <div class="gear-heading"><span class="gear-label"><svg class="gear-icon" data-icon="manual-gearbox" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="Gearshift"><title>Gearshift</title><path d="M3 6a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /><path d="M10 6a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /><path d="M17 6a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /><path d="M3 18a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /><path d="M10 18a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /><path d="M5 8v8M12 8v8M19 8v2a2 2 0 0 1 -2 2H5" /></svg><b id="gear">—</b></span><span id="drs" class="drs-indicator" role="img" aria-label="DRS unavailable" title="No recorded DRS sample">DRS</span></div>
+            <div class="gear-segments" id="gear-segments" role="meter" aria-label="Recorded gear" aria-valuemin="0" aria-valuemax="8" aria-valuetext="No sample"></div>
+          </div>
+          <div class="pedals">
+            <div class="pedal-gauge" id="throttle" role="meter" aria-label="Recorded throttle" aria-valuemin="0" aria-valuemax="100" aria-valuetext="No sample"><svg id="throttle-dial" viewBox="-58 -58 116 100" aria-hidden="true"></svg></div>
+            <div class="pedal-gauge" id="brake" role="meter" aria-label="Recorded brake" aria-valuemin="0" aria-valuemax="100" aria-valuetext="No sample"><svg id="brake-dial" viewBox="-58 -58 116 100" aria-hidden="true"></svg></div>
+          </div>
+          <div class="speed-chart"><div class="speed-plot"><canvas id="speed-chart" aria-label="Recorded speed against elapsed time through the selected lap, with gear-change markers"></canvas><div class="gear-markers" id="gear-markers"><svg class="gear-leaders" aria-hidden="true"></svg></div><div class="gear-tooltip" id="gear-tooltip" role="tooltip" hidden><strong></strong><span></span></div></div><div class="chart-labels"><span>LAP START</span><span>LAP TIME / OPENF1 1 Hz</span></div></div>
+        </div>
+      </section>
+      </div>
+
+    </main>
+
+    <aside class="right-stack">
+      <section class="panel sectors-panel"><div class="panel-heading"><span><i>F</i>RECORDED SECTORS</span><span>SECONDS</span></div><div class="sector-row"><span><i class="sector-dot s1"></i>SECTOR 01</span><b id="sector-1">—</b><small>TECHNICAL</small></div><div class="sector-row"><span><i class="sector-dot s2"></i>SECTOR 02</span><b id="sector-2">—</b><small>CITY STREETS</small></div><div class="sector-row"><span><i class="sector-dot s3"></i>SECTOR 03</span><b id="sector-3">—</b><small>BAYFRONT</small></div><canvas id="sector-chart" aria-label="Sector comparison"></canvas><div class="sector-total"><span>RECORDED LAP TIME</span><b id="lap-time">—</b></div></section>
+      <section class="panel news-panel" aria-label="Singapore Grand Prix post-race news"><div class="panel-heading"><span><i>H</i>PADDOCK NEWS</span><span>F1.COM</span></div><ol id="news-list" class="news-list"></ol><div class="panel-note" id="news-note">POST-RACE HEADLINES · TIMES IN SGT</div></section>
+      <footer class="panel sources-panel"><button id="about" type="button" aria-haspopup="dialog" aria-controls="sources-dialog">DATA & SOURCES ↗</button><a href="https://kartel.sh" target="_blank" rel="noreferrer">KARTEL.SH ↗</a></footer>
+    </aside>
+
+  </div>
+  <dialog id="sources-dialog"><div class="dialog-heading"><span class="eyebrow">SG GRAND PRIX 2026 / DATA NOTES</span><button id="close-dialog" type="button" aria-label="Close data notes">×</button></div><h2>A circuit study after dark.</h2><p>The replay uses the 11 October 2026 Singapore Grand Prix, OpenF1 session 11388. All 22 drivers, lap and sector times, speed, gear, throttle, brake, DRS, standings, gaps, tyre stints and race-control messages come from that historical session. The archive retains approximately one telemetry sample per second. Missing samples display a dash. The 2026 source has no DRS records, so that status remains unavailable. Final standings include the official classification and penalties.</p><p>Cars follow the recorded speed profile, integrated between samples and aligned to recorded lap crossings on the anti-clockwise circuit. A per-lap distance correction keeps the estimated position synchronized with timing. Missing speed intervals use lap timing. These positions are estimates, not recorded GPS trajectories. Speed charts show time through the selected lap. The weekend programme refers to the completed 2026 event. Post-race news links to official Formula 1 articles published after this race. The news is bundled at build time and makes no runtime API requests. Retired drivers stop at their last recorded moving telemetry sample and disappear from the circuit. An incomplete retirement lap uses integrated distance without scaling it to a full lap. The buildings and landmarks are procedural illustrations. Circuit coordinates are community mapping data. Surrounding road outlines follow OpenStreetMap road centerlines, with edge widths estimated from width, lane and road-class tags. Underground roads and footpaths are omitted. Track width, pit lane, barriers, grandstands, lights and sector divisions are schematic.</p><p><a href="https://openf1.org/" target="_blank" rel="noreferrer">Historical race data · OpenF1 ↗</a><br /><a href="https://api.jolpi.ca/ergast/f1/2026/17/results.json" target="_blank" rel="noreferrer">2026 race classification ↗</a><br /><a href="https://www.formula1.com/en/racing/2026/singapore" target="_blank" rel="noreferrer">Official event schedule ↗</a><br /><a href="https://github.com/bacinger/f1-circuits" target="_blank" rel="noreferrer">Circuit mapping · Tomislav Bacinger / MIT ↗</a><br /><a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">Road mapping · © OpenStreetMap contributors / ODbL ↗</a><br /><a href="./data/marina-bay-roads.geojson" target="_blank" rel="noreferrer">Bundled road extract and metadata ↗</a><br /><a href="https://github.com/IBM/plex" target="_blank" rel="noreferrer">IBM Plex Mono / SIL Open Font License ↗</a></p><p>Driver portraits come from the official 2026 Formula 1 profile pages, matched to the OpenF1 roster. <a href="./data/driver-portrait-sources.json" target="_blank" rel="noreferrer">Portrait source records ↗</a> list the individual images and their rights holders. Photos fall back to initials if unavailable. <a href="./data/team-logo-sources.json" target="_blank" rel="noreferrer">2026 team logo sources ↗</a> list the official Formula 1 media URLs used by the telemetry profile. Driver ages refer to the replay race date, 11 October 2026. Birth dates come from <a href="https://api.jolpi.ca/ergast/f1/2026/drivers.json?limit=100" target="_blank" rel="noreferrer">Jolpi driver metadata ↗</a>; short biographies use <a href="https://www.formula1.com/en/drivers" target="_blank" rel="noreferrer">official Formula 1 driver profiles ↗</a> and career facts up to that race. Both are bundled locally.</p><p>The open-wheel 3D car is from <a href="https://kenney.nl/assets/racing-kit" target="_blank" rel="noreferrer">Kenney Racing Kit ↗</a>, licensed under <a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank" rel="noreferrer">CC0 ↗</a>. It is a generic formula car with team colours, not an exact 2026 chassis or livery.</p><p>The telemetry dial adapts <a href="https://www.gauge-ui.dev/" target="_blank" rel="noreferrer">Gauge UI ↗</a> to the dashboard theme. Its source is available under the <a href="./licenses/gauge-ui.txt" target="_blank" rel="noreferrer">MIT license ↗</a>.</p><p>The gearshift icon adapts <a href="https://tabler.io/icons/icon/manual-gearbox" target="_blank" rel="noreferrer">Tabler Icons ↗</a>, with its <a href="./licenses/tabler-icons.txt" target="_blank" rel="noreferrer">MIT license ↗</a>.</p><p class="muted">Independent fan prototype. No affiliation with Formula 1 or the Singapore Grand Prix.</p></dialog>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

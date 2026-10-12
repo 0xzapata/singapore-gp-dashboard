@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.cache/
+.vercel/
+.wrangler/
+.env*
+!.env.example
+assets/driver-portraits/

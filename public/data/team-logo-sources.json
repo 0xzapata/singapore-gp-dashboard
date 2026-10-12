@@ -1,0 +1,61 @@
+{
+  "season": 2026,
+  "source": "Official Formula 1 media CDN",
+  "logos": [
+    {
+      "team": "Mercedes",
+      "slug": "mercedes",
+      "url": "https://media.formula1.com/image/upload/c_lfill,w_64/q_auto/common/f1/2026/mercedes/2026mercedeslogowhite.webp"
+    },
+    {
+      "team": "Ferrari",
+      "slug": "ferrari",
+      "url": "https://media.formula1.com/image/upload/c_lfill,w_64/q_auto/common/f1/2026/ferrari/2026ferrarilogowhite.webp"
+    },
+    {
+      "team": "McLaren",
+      "slug": "mclaren",
+      "url": "https://media.formula1.com/image/upload/c_lfill,w_64/q_auto/common/f1/2026/mclaren/2026mclarenlogowhite.webp"
+    },
+    {
+      "team": "Aston Martin",
+      "slug": "astonmartin",
+      "url": "https://media.formula1.com/image/upload/c_lfill,w_64/q_auto/common/f1/2026/astonmartin/2026astonmartinlogowhite.webp"
+    },
+    {
+      "team": "Alpine",
+      "slug": "alpine",
+      "url": "https://media.formula1.com/image/upload/c_lfill,w_64/q_auto/common/f1/2026/alpine/2026alpinelogowhite.webp"
+    },
+    {
+      "team": "Haas F1 Team",
+      "slug": "haasf1team",
+      "url": "https://media.formula1.com/image/upload/c_lfill,w_64/q_auto/common/f1/2026/haasf1team/2026haasf1teamlogowhite.webp"
+    },
+    {
+      "team": "Williams",
+      "slug": "williams",
+      "url": "https://media.formula1.com/image/upload/c_lfill,w_64/q_auto/common/f1/2026/williams/2026williamslogowhite.webp"
+    },
+    {
+      "team": "Red Bull Racing",
+      "slug": "redbullracing",
+      "url": "https://media.formula1.com/image/upload/c_lfill,w_64/q_auto/common/f1/2026/redbullracing/2026redbullracinglogowhite.webp"
+    },
+    {
+      "team": "Racing Bulls",
+      "slug": "racingbulls",
+      "url": "https://media.formula1.com/image/upload/c_lfill,w_64/q_auto/common/f1/2026/racingbulls/2026racingbullslogowhite.webp"
+    },
+    {
+      "team": "Audi",
+      "slug": "audi",
+      "url": "https://media.formula1.com/image/upload/c_lfill,w_64/q_auto/common/f1/2026/audi/2026audilogowhite.webp"
+    },
+    {
+      "team": "Cadillac",
+      "slug": "cadillac",
+      "url": "https://media.formula1.com/image/upload/c_lfill,w_64/q_auto/common/f1/2026/cadillac/2026cadillaclogowhite.webp"
+    }
+  ]
+}
