@@ -61,21 +61,31 @@ Run `python3 scripts/import-streets.py` to regenerate the road extract. The impo
 
 The circuit shows asphalt, curbs, barriers and edge markings, with no colored centerline or glowing route tube. Driver birth dates come from [Jolpi driver metadata](https://api.jolpi.ca/ergast/f1/2026/drivers.json?limit=100), and brief career notes use [official Formula 1 driver biographies](https://www.formula1.com/en/drivers). Ages and career facts refer to the 11 October 2026 replay date.
 
-The procedural city, landmark placement, road width, pit lane, barriers, lights, grandstands, sector divisions and corner labels are schematic. The display does not connect to live timing or predict the 2226 race result.
+The procedural city, landmark placement, road width, pit lane, barriers, lights, grandstands, sector divisions and corner labels are schematic. The display replays the recorded 2026 race and does not connect to live timing.
 
 IBM Plex Mono uses the SIL Open Font License, included in `public/fonts/OFL.txt`. The design and implementation are original; the reference site was used for visual direction only.
 
 ## Car asset
 
-The open-wheel model is `raceCarWhite.glb` from [Kenney Racing Kit 2.0](https://kenney.nl/assets/racing-kit), licensed under [CC0](https://creativecommons.org/publicdomain/zero/1.0/). The original binary is bundled as `public/models/formula-car.glb`; the original license is in `public/models/KENNEY-LICENSE.txt`. `public/models/formula-car-source.json` records the source download, original filename and SHA-256. The model is about 106 KB and has no external textures.
+The detailed car is **F1 Generic 2022 by TheoDev**, licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). The source archive is available in [diazandez/threejs-F1-2022-models](https://github.com/diazandez/threejs-F1-2022-models/tree/2f0c3e774c698b79095755093495f4b4a102d06e/f1_generic_2022). The original model's Sketchfab page is no longer available; its embedded attribution and archived license are preserved in `public/models/F1-CAR-LICENSE.txt` and `public/models/formula-car-source.json`.
 
-The scene shares its geometry across all 22 cars, recolours materials for each team, aligns the nose to the circuit tangent and animates the wheels from replay progress. Car cam follows the selected driver and works with pause, seek and driver selection. This is a generic formula car, not an exact 2026 chassis or sponsor livery. Cars use a deliberately small length of 0.34 scene units.
+The adapted model has a sculpted body, multi-element wings, halo, cockpit, suspension, textured tyres, brake parts, and detailed rims. The importer separates the four wheel pivots, prepares body paint for team colours, reduces geometry for two viewing distances, converts embedded textures to WebP, and compresses geometry with Meshopt. The 1,532,608-byte GLB contains 101,506 triangles for close views and 20,807 for the overview. Cars switch to the distant geometry beyond six scene units, with hysteresis to prevent flickering near the transition.
+
+Rebuild the asset from its pinned source with:
+
+```sh
+npx --yes --package @gltf-transform/cli@4.4.0 -c 'node scripts/import-formula-car.js'
+```
+
+All 22 cars share geometry and textures. Team paint materials are cached, and tyre rotation uses each wheel's actual radius. A generated environment map adds reflections without an external HDR download. Car cam follows the selected driver and retains its smooth camera flights. This is a generic 2022-era F1 chassis with team colours. It does not reproduce each constructor's 2026 chassis or sponsor livery. Cars retain the small 0.34-scene-unit length.
+
+Production loads the GLB once from Cloudflare R2's `dev-assets-bucket`, at `sg-grand-prix/models/f1-generic-2022-v1/formula-car.glb`, with a one-year immutable browser cache. Set `VITE_FORMULA_CAR_URL` to the public URL in `.env.example`. The binary is excluded from Vercel uploads. A local build without this variable loads `public/models/formula-car.glb`.
 
 ## Driver portraits
 
-Portraits come from Formula 1 media URLs referenced by OpenF1's historical driver metadata. Colapinto's session record has no portrait URL, so his official Formula 1 headshot fills that entry. The download script records the source URL, dimensions and SHA-256 for each image in `public/data/driver-portrait-sources.json`. Photographs belong to their respective rights holders; the car model's CC0 license does not apply to them.
+Portraits come from the official 2026 Formula 1 driver profile pages, matched to the OpenF1 roster. The download script records the source URL, dimensions and SHA-256 for each image in `public/data/driver-portrait-sources.json`. Photographs belong to their respective rights holders. The car model's CC BY license does not apply to them.
 
-Refresh portraits with `python scripts/import-driver-portraits.py`. Each photograph is 93 × 93 pixels, sufficient for the small tracking card. Downloaded files are staged in `assets/driver-portraits/`, outside the static build, and excluded from Vercel uploads.
+Refresh portraits with `python3 scripts/import-driver-portraits.py`. Each photograph is 192 × 208 pixels. Downloaded files are staged in `assets/driver-portraits/`, outside the static build, and excluded from Vercel uploads.
 
 The 22 photographs are hosted in Cloudflare R2's existing `dev-assets-bucket`, under `sg-grand-prix/portraits/2026-v2/`. The public base is `https://pub-451ea606e71242028630e5aadc8cd8aa.r2.dev/sg-grand-prix/portraits/2026-v2`. Set `VITE_DRIVER_PORTRAITS_URL` to this value in `.env.local` for local builds and in Vercel's Production environment. Portraits use the current 2026 Formula 1 profile images, including Lindblad, Perez and Bottas. Only the selected driver's photograph loads, with a one-year immutable browser cache. Failed images fall back to initials.
 
@@ -101,6 +111,6 @@ The complete reproduction prompt is in [docs/dashboard-generation-prompt.md](doc
 
 ## Hosting and replay traffic
 
-Vercel serves static HTML, JavaScript, fonts, map geometry, the car model, and the bundled race archive. The compressed 2026 race archive is about 1.20 MB. The browser downloads the archive once at startup and calculates playback, seeking, car movement, and telemetry locally, without polling OpenF1 or invoking server functions. Driver portraits load from Cloudflare R2; team logos load from Formula 1's media CDN.
+Vercel serves static HTML, JavaScript, fonts, map geometry, and the bundled race archive. The compressed 2026 race archive is about 1.20 MB. The browser downloads the archive once at startup and calculates playback, seeking, car movement, and telemetry locally, without polling OpenF1 or invoking server functions. The shared car model and driver portraits load from Cloudflare R2. Team logos load from Formula 1's media CDN.
 
 A fresh visit transfers the archive and static app assets once. Repeat-load transfer depends on browser caching. Vercel Hobby includes 100 GB of Fast Data Transfer and one million CDN requests; exceeding those allowances can interrupt availability without automatic usage overages. Review the current plan and [official Vercel limits](https://vercel.com/docs/plans/hobby) before upgrading. R2 and CDN pricing have separate allowances.

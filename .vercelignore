@@ -3,3 +3,5 @@ node_modules/
 dist/
 assets/driver-portraits/
 .wrangler/
+public/models/formula-car.glb
+docs/media/

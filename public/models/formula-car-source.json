@@ -1,10 +1,169 @@
 {
-  "author": "Kenney",
-  "asset": "Racing Kit 2.0 / raceCarWhite",
-  "source": "https://kenney.nl/assets/racing-kit",
-  "download": "https://kenney.nl/media/pages/assets/racing-kit/933b8fd9fd-1677580949/kenney_racing-kit.zip",
-  "license": "CC0-1.0",
-  "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-  "originalPath": "Models/GLTF format/raceCarWhite.glb",
-  "sha256": "b1e50959852ec6f91070f802edd1be42896b2c87fbacfebab72f6e1017832cd0"
+  "author": "TheoDev",
+  "asset": "F1 Generic 2022",
+  "source": "https://sketchfab.com/3d-models/f1-generic-2022-3562a1c1935440bb8bdb4b1f04df0be1",
+  "mirror": "https://github.com/diazandez/threejs-F1-2022-models/tree/2f0c3e774c698b79095755093495f4b4a102d06e/f1_generic_2022",
+  "sourceCommit": "2f0c3e774c698b79095755093495f4b4a102d06e",
+  "license": "CC-BY-4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+  "attribution": "F1 Generic 2022 by TheoDev, licensed under CC BY 4.0. Adapted with team colours, wheel pivots, texture compression and levels of detail.",
+  "changes": [
+    "Split tyres, rims and brake geometry into four rotating wheel pivots",
+    "Prepared neutral body paint for team recolouring",
+    "Generated close-view and distant-view geometry",
+    "Resized textures to at most 1024px and converted to WebP",
+    "Applied Meshopt geometry compression"
+  ],
+  "triangles": {
+    "detail": 101506,
+    "overview": 20807
+  },
+  "bytes": 1532608,
+  "sha256": "7bcc046b05b54f3e192685b2b77a4fa7ef61133a032ecf57cbf29c7ad1c614ba",
+  "wheelPivots": [
+    {
+      "name": "wheel_front_left",
+      "position": [
+        -1.0627600252628326,
+        0.4749080017209053,
+        1.9169999957084656
+      ],
+      "radius": 0.45478200167417526,
+      "spinAxis": "x"
+    },
+    {
+      "name": "wheel_front_right",
+      "position": [
+        1.062758982181549,
+        0.4749080017209053,
+        1.9169999957084656
+      ],
+      "radius": 0.45478200167417526,
+      "spinAxis": "x"
+    },
+    {
+      "name": "wheel_rear_left",
+      "position": [
+        -0.9985560178756714,
+        0.47623599076177925,
+        -2.720359444618225
+      ],
+      "radius": 0.47416299080941826,
+      "spinAxis": "x"
+    },
+    {
+      "name": "wheel_rear_right",
+      "position": [
+        0.9985560178756714,
+        0.47623599076177925,
+        -2.720359444618225
+      ],
+      "radius": 0.47416299080941826,
+      "spinAxis": "x"
+    }
+  ],
+  "sourceFiles": [
+    {
+      "path": "license.txt",
+      "url": "https://raw.githubusercontent.com/diazandez/threejs-F1-2022-models/2f0c3e774c698b79095755093495f4b4a102d06e/f1_generic_2022/license.txt",
+      "bytes": 680,
+      "sha256": "ee8d92cd402119a35bdc205afc99d73528ba264e1ef0d846cb5ab1023f4f3925"
+    },
+    {
+      "path": "scene.bin",
+      "url": "https://raw.githubusercontent.com/diazandez/threejs-F1-2022-models/2f0c3e774c698b79095755093495f4b4a102d06e/f1_generic_2022/scene.bin",
+      "bytes": 10063688,
+      "sha256": "1c8b576e0ff9a648fb605c7ea2b8c54724b58c8a091a3ca9ff3d4b9c3b392256"
+    },
+    {
+      "path": "scene.gltf",
+      "url": "https://raw.githubusercontent.com/diazandez/threejs-F1-2022-models/2f0c3e774c698b79095755093495f4b4a102d06e/f1_generic_2022/scene.gltf",
+      "bytes": 39824,
+      "sha256": "8f2c0554e6cf3184d45b9e50e57900a9f93dd633b4a3f57de6d0c994c8c3798c"
+    },
+    {
+      "path": "textures/brake_baseColor.png",
+      "url": "https://raw.githubusercontent.com/diazandez/threejs-F1-2022-models/2f0c3e774c698b79095755093495f4b4a102d06e/f1_generic_2022/textures/brake_baseColor.png",
+      "bytes": 187133,
+      "sha256": "18a38087f8dbf6b9c0d9a36ff59e75c2100b2e4562b8afdb41179dbd86f3e222"
+    },
+    {
+      "path": "textures/carbon_baseColor.png",
+      "url": "https://raw.githubusercontent.com/diazandez/threejs-F1-2022-models/2f0c3e774c698b79095755093495f4b4a102d06e/f1_generic_2022/textures/carbon_baseColor.png",
+      "bytes": 1983,
+      "sha256": "d8934167f848d1fb4a1f45027d111d23cb61a3f79fe0699de9bba8ad4c011e70"
+    },
+    {
+      "path": "textures/chrome_baseColor.png",
+      "url": "https://raw.githubusercontent.com/diazandez/threejs-F1-2022-models/2f0c3e774c698b79095755093495f4b4a102d06e/f1_generic_2022/textures/chrome_baseColor.png",
+      "bytes": 109943,
+      "sha256": "48616db65e88ea5487a5342763cbe2159156ff9d0d39151a7b759eeabfbd322b"
+    },
+    {
+      "path": "textures/generic_baseColor.png",
+      "url": "https://raw.githubusercontent.com/diazandez/threejs-F1-2022-models/2f0c3e774c698b79095755093495f4b4a102d06e/f1_generic_2022/textures/generic_baseColor.png",
+      "bytes": 518943,
+      "sha256": "25fc0077711ea55afae981f62a3d83c5439f42d8495dec6e4eafe7859627801c"
+    },
+    {
+      "path": "textures/Livery_baseColor.png",
+      "url": "https://raw.githubusercontent.com/diazandez/threejs-F1-2022-models/2f0c3e774c698b79095755093495f4b4a102d06e/f1_generic_2022/textures/Livery_baseColor.png",
+      "bytes": 30785,
+      "sha256": "50ec4b103abd333eaf90b9f8869d8de0082292027e2f812b338d70431a5d9b82"
+    },
+    {
+      "path": "textures/Livery_blue_baseColor.png",
+      "url": "https://raw.githubusercontent.com/diazandez/threejs-F1-2022-models/2f0c3e774c698b79095755093495f4b4a102d06e/f1_generic_2022/textures/Livery_blue_baseColor.png",
+      "bytes": 32767,
+      "sha256": "74860c1b7c4ecc1eb1ac853c96bb181747ead60ab6ead68977247af520342fb8"
+    },
+    {
+      "path": "textures/Livery_white_baseColor.png",
+      "url": "https://raw.githubusercontent.com/diazandez/threejs-F1-2022-models/2f0c3e774c698b79095755093495f4b4a102d06e/f1_generic_2022/textures/Livery_white_baseColor.png",
+      "bytes": 24748,
+      "sha256": "5981cb0697f676890451c1fd434de4f2db7ad8bc905a20a74b6f0680dca8b2f5"
+    },
+    {
+      "path": "textures/Livery_Wings_baseColor.png",
+      "url": "https://raw.githubusercontent.com/diazandez/threejs-F1-2022-models/2f0c3e774c698b79095755093495f4b4a102d06e/f1_generic_2022/textures/Livery_Wings_baseColor.png",
+      "bytes": 49938,
+      "sha256": "b4cca4d4e11260a28a88610c80739f7b260633b2c29acacbd117bdd79c4faf6f"
+    },
+    {
+      "path": "textures/Livery_wings_Blue_baseColor.png",
+      "url": "https://raw.githubusercontent.com/diazandez/threejs-F1-2022-models/2f0c3e774c698b79095755093495f4b4a102d06e/f1_generic_2022/textures/Livery_wings_Blue_baseColor.png",
+      "bytes": 57683,
+      "sha256": "d5dd4ca5442c2ac6e49b0a5c1230b35d0b7d0cdc24726dee1e4fdd7efa9c4816"
+    },
+    {
+      "path": "textures/rims_baseColor.png",
+      "url": "https://raw.githubusercontent.com/diazandez/threejs-F1-2022-models/2f0c3e774c698b79095755093495f4b4a102d06e/f1_generic_2022/textures/rims_baseColor.png",
+      "bytes": 106905,
+      "sha256": "4218cfc65f9b66fa676f54e85311005d77345b46a114f73b9cee6fc43eb222b4"
+    },
+    {
+      "path": "textures/Steer_baseColor.png",
+      "url": "https://raw.githubusercontent.com/diazandez/threejs-F1-2022-models/2f0c3e774c698b79095755093495f4b4a102d06e/f1_generic_2022/textures/Steer_baseColor.png",
+      "bytes": 1128675,
+      "sha256": "1488be6cd4a958d89c9d65f888be7dc16284869082c65b4b3f6e790f734ee34e"
+    },
+    {
+      "path": "textures/tyres_baseColor.png",
+      "url": "https://raw.githubusercontent.com/diazandez/threejs-F1-2022-models/2f0c3e774c698b79095755093495f4b4a102d06e/f1_generic_2022/textures/tyres_baseColor.png",
+      "bytes": 67720,
+      "sha256": "02b5ca7fd2d2622cd6aac6459aa6f27378c025f590ad9b2068631328352631ae"
+    },
+    {
+      "path": "textures/UV_map_baseColor.png",
+      "url": "https://raw.githubusercontent.com/diazandez/threejs-F1-2022-models/2f0c3e774c698b79095755093495f4b4a102d06e/f1_generic_2022/textures/UV_map_baseColor.png",
+      "bytes": 852439,
+      "sha256": "8c9aa55bff67bc46ad120a51813706194b70c2fe42b26f6efa4de861ee3e2416"
+    },
+    {
+      "path": "textures/UV_map_wings_baseColor.png",
+      "url": "https://raw.githubusercontent.com/diazandez/threejs-F1-2022-models/2f0c3e774c698b79095755093495f4b4a102d06e/f1_generic_2022/textures/UV_map_wings_baseColor.png",
+      "bytes": 869199,
+      "sha256": "6c29da2d3feb172668e4963da4318dd5a3c6f638d0c491b10801224638d5f7d7"
+    }
+  ]
 }

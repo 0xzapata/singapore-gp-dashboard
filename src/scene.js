@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { createCity } from './city.js';
 import { createTrack } from './track.js';
 import { loadFormulaCars } from './cars.js';
@@ -19,6 +20,11 @@ export async function createCircuitScene(container, hud, coordinates, drivers, s
   const keyLight = new THREE.DirectionalLight('#ffdfbd', 2.8);keyLight.position.set(-12, 25, 14);scene.add(keyLight);
   scene.fog = new THREE.FogExp2('#080a0c', .006);
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+  const environment = new RoomEnvironment();
+  const environmentGenerator = new THREE.PMREMGenerator(renderer);
+  const environmentMap = environmentGenerator.fromScene(environment, .04);
+  scene.environment = environmentMap.texture;scene.environmentIntensity = .5;
+  environment.dispose();environmentGenerator.dispose();
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.7));
   renderer.setClearColor('#080a0c', 0);
   container.append(renderer.domElement);
@@ -154,7 +160,7 @@ export async function createCircuitScene(container, hud, coordinates, drivers, s
       controls.target.copy(target);controls.update();
     },
     setCity(visible) { city.setVisible(visible); },
-    dispose() { observer.disconnect();driverCard.dispose();carCamera.stop();controls.dispose();streets.dispose();fleet.dispose();lens.dispose();renderer.dispose(); },
+    dispose() { observer.disconnect();driverCard.dispose();carCamera.stop();controls.dispose();streets.dispose();fleet.dispose();lens.dispose();environmentMap.dispose();renderer.dispose(); },
     pointCount: city.pointCount,
   };
 }
